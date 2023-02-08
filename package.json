@@ -1,7 +1,7 @@
 {
   "name": "venta-online",
   "version": "1.0.0",
-  "description": "Server API",
+  "description": "Es un proyecto creado para una Tienda Online",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
