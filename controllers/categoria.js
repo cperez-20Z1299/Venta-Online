@@ -21,7 +21,7 @@ const getCategoria = async (req = request, res = response) => {
 const postCategoria = async (req = request, res = response) => {
     const { nombre, proveedor, tipo, estado } = req.body;
 
-    const categoriaDB = new Categoria({ nombre, proveedor, tipo, estado });
+    const categoriaDB = new Categoria({ nombre, proveedor, tipo, tamaño, estado });
 
     await categoriaDB.save();
 
@@ -34,9 +34,7 @@ const postCategoria = async (req = request, res = response) => {
 const putCategoria = async (req = request, res = response) => {
     const { id } = req.params;
 
-
     const { _id, estado, ...resto } = req.body;
-
 
     const categoriaEditada = await Categoria.findByIdAndUpdate(id, resto);
 
@@ -48,7 +46,6 @@ const putCategoria = async (req = request, res = response) => {
 
 const deleteCategoria = async (req = request, res = response) => {
     const { id } = req.params;
-
 
     const categoriaEliminada = await Categoria.findByIdAndDelete(id);
     res.json({
