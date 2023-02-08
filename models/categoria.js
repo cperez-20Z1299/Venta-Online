@@ -13,10 +13,6 @@ const CategoriaSchema = Schema({
         type: String,
         required: true
     },
-    tamaño: {
-        type: String,
-        required: true
-    },
     estado: {
         type: Boolean,
         default: true
