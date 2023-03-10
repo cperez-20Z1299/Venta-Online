@@ -5,25 +5,26 @@ const ProductoSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio']
     },
+    descripcion: {
+        type: String
+    },
     precio: {
         type: Number,
-        required: true
-    },
-    fechaCaducidad: {
-        type: Date,
-        required: [true, 'La fecha es obligatoria']
-    },
-    tamaño: {
-        type: String,
-        enum: [grande, mediano, pequeño]
-    },
-    stock: {
-        type: number,
         required: true
     },
     estado: {
         type: Boolean,
         default: true
+    },
+    categoria: {
+        type: Schema.Types.ObjectId,
+        ref: 'Categoria',
+        required: true
+    },
+    usuario: {
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
+        required: true
     }
 });
 

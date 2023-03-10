@@ -31,7 +31,7 @@ const getCategoriaPorId = async(req = request, res = response) => {
 const postCategoria = async (req = request, res = response) => {
     const { nombre, descripcion, proveedor, tipo, estado } = req.body;
 
-    const categoriaDB = new Categoria.findOne({ nombre});
+    const categoriaDB = await Categoria.findOne({ nombre });
     if (categoriaDB) {
         return res.status(400).json({
             msg: `La categorria ${categoriaDB.nombre}, ya existe en la DB`

@@ -7,8 +7,8 @@ const getProducto = async (req = request, res = response) => {
     const query = { estado: true };
 
     const listaProducto = await Promise.all([
-        Categoria.countDocuments(query),
-        Categoria.find(query)
+        Producto.countDocuments(query),
+        Producto.find(query).populate('usuario', 'nombre').populate('categoria','nombre')
     ]);
 
     res.json({
@@ -16,25 +16,83 @@ const getProducto = async (req = request, res = response) => {
     });
 }
 
-const postProducto = async (req = request, res = response) => {
-    const { nombre, descripcion, proveedor, tipo, estado } = req.body;
+const getProductoPorNombre = async(req = request, res = response) => {
 
-    const productoDB = new Producto({ nombre, precio, fechaCaducidad, tamaño, stock, estado });
+    const {nombre} = req.body;
 
-    await productoDB.save();
+    const buscarProducto = await Producto.findOne({nombre}).populate('categoria', 'nombre')
 
     res.json({
-        msg: 'POST API de Productos',
-        productoDB
+        buscarProducto
+    })
+}
+
+const getProductoMasVendido = async(req = request, res = response) => {
+
+    const { id } = req.params;
+    const producto = await Producto.findById(id).populate('usuario', 'nombre').populate('categoria', 'nombre');
+
+    res.json({
+        msg: 'Producto por id',
+        producto
+    })
+}
+
+const getProductoAgotado = async(req = request, res = response) => {
+
+    const query = { estado: false };
+
+    const listaProdcutos = await Promise.all([
+        Producto.countDocuments(query),
+        Producto.find(query).populate('categoria', 'nombre')
+    ]);
+
+    res.json({
+        listaProdcutos
+    });
+}
+
+const postProducto = async (req = request, res = response) => {
+                                // Operador spread
+    const { estado, usuario, ...body } = req.body;
+
+    //Validacion si existe un producto en la DB
+    const productoEnDB = await Producto.findOne({nombre: body.nombre});
+    if(productoEnDB){
+        return res.status(400).json({
+            msj: `El producto ${productoEnDB} ya existe en la DB`
+        });
+    }
+
+    //Generar data a guardar
+    const data = {
+        ...body,
+        nombre: body.nombre.toUpperCase(),
+        usuario: req.usuario._id
+    }
+
+    const producto = new Producto(data);
+
+    await producto.save();
+
+    res.status(201).json({
+        msg: 'Post de producto',
+        producto
     });
 }
 
 const putProducto = async (req = request, res = response) => {
+    
     const { id } = req.params;
+    const {_id, estado, usuario, ...data} = req.body;
 
-    const { _id, estado, ...resto } = req.body;
+    if(data.nombre){
+        data.nombre = data.nombre.toUpperCase();
+    }
 
-    const productoEditado = await Producto.findByIdAndUpdate(id, resto);
+    data.usuario = req.usuario._id; //Hacemos referencia al usuario que hizo el put por medio del token
+
+    const productoEditado = await Producto.findByIdAndUpdate(id, data, { new: true});
 
     res.json({
         msg: 'PUT API de Productos',
@@ -43,9 +101,10 @@ const putProducto = async (req = request, res = response) => {
 }
 
 const deleteProducto = async (req = request, res = response) => {
+    
     const { id } = req.params;
-
-    const productoEliminado = await Producto.findByIdAndDelete(id);
+    const productoBorrado = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true});
+    
     res.json({
         msg: 'DELETE API de Productos',
         productoEliminado
@@ -54,6 +113,9 @@ const deleteProducto = async (req = request, res = response) => {
 
 module.exports = {
     getProducto,
+    getProductoPorNombre,
+    getProductoMasVendido,
+    getProductoAgotado,
     postProducto,
     putProducto,
     deleteProducto
