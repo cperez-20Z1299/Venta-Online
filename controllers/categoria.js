@@ -29,7 +29,7 @@ const getCategoriaPorId = async(req = request, res = response) => {
 }
 
 const postCategoria = async (req = request, res = response) => {
-    const { nombre, descripcion, proveedor, tipo, estado } = req.body;
+    const { nombre, descripcion, proveedor, tipo } = req.body;
 
     const categoriaDB = await Categoria.findOne({ nombre });
     if (categoriaDB) {
@@ -40,6 +40,9 @@ const postCategoria = async (req = request, res = response) => {
 
     const data = {
         nombre,
+        descripcion,
+        proveedor,
+        tipo,
         usuario: req.usuario._id
     }
 

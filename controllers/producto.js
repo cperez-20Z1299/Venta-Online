@@ -16,6 +16,22 @@ const getProducto = async (req = request, res = response) => {
     });
 }
 
+const getProductoPorNombreCategoria = async(req = request, res = response) => {
+
+    const { idProductoCategoria } = req.params;
+    const query = { categoria: idProductoCategoria }
+
+    const listaProducto = await Promise.all([
+        Producto.countDocuments(query),
+        Producto.find(query).populate('categoria', 'nombre')
+    ]);
+
+    res.json({
+        msg: 'Categoria por id',
+        listaProducto
+    })
+}
+
 const getProductoPorNombre = async(req = request, res = response) => {
 
     const {nombre} = req.body;
@@ -103,17 +119,18 @@ const putProducto = async (req = request, res = response) => {
 const deleteProducto = async (req = request, res = response) => {
     
     const { id } = req.params;
-    const productoBorrado = await Categoria.findByIdAndUpdate(id, {estado: false}, {new: true});
+    const productoBorrado = await Producto.findByIdAndUpdate(id, {estado: false}, {new: true});
     
     res.json({
         msg: 'DELETE API de Productos',
-        productoEliminado
+        productoBorrado
     });
 }
 
 module.exports = {
     getProducto,
     getProductoPorNombre,
+    getProductoPorNombreCategoria,
     getProductoMasVendido,
     getProductoAgotado,
     postProducto,

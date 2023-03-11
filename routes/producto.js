@@ -6,8 +6,8 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 const { esAdminRole } = require('../middlewares/validar-roles');
 
 //Controladores
-const { getProducto, getProductoPorNombre, getProductoMasVendido, getProductoAgotado,  postProducto, putProducto, deleteProducto} = require('../controllers/producto');
-const { existeProductoPorId, existeCategoriaPorId, existeProducto, productoExiste } = require('../helpers/db-validator');
+const { getProducto, getProductoPorNombre, getProductoMasVendido, getProductoAgotado,  postProducto, putProducto, deleteProducto, getProductoPorNombreCategoria} = require('../controllers/producto');
+const { existeProductoPorId, existeCategoriaPorId, existeProducto, productoExiste, categoriaExiste } = require('../helpers/db-validator');
 
 const router = Router();
 
@@ -20,8 +20,14 @@ router.get('/productosPorNombre', [
     validarCampos
 ], getProductoPorNombre);
 
+//Obtener un producto por el nombre de la categoria- publico
+router.get('/productosPorNombreCategoria/:idProductoCategoria', [
+    check('nombre').custom(categoriaExiste),
+    validarCampos
+], getProductoPorNombreCategoria);
+
 //Obtener el producto mas vendido
-router.get('/', [
+router.get('/productoMasVendido', [
     
 ], getProductoMasVendido);
 

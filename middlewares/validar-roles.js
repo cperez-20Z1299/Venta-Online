@@ -11,11 +11,18 @@ const esAdminRole = ( req = request, res = response, next ) => {
     //Verificación solo el rol de Admi puede realizar la eliminación
     //Si cumple con el rol de admin se envia al controllador deleteUsuario
     const { rol, nombre  } = req.usuario
-    if ( rol !== 'ADMIN_ROLE') {
+    if ( rol !== 'ADMIN_ROLE' ) {
         return res.status(401).json({
             msg: `${ nombre } no es admin - No puede hacer esto >:v`
         });
     }
+
+    /*if ( rol === 'ADMIN_ROLE' ) {
+        return res.status(401).json({
+            msg: `${ nombre } es un admin - No puede hacer esto`
+        });
+    }*/
+
     next();
 }
 
