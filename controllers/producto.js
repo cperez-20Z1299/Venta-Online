@@ -45,12 +45,11 @@ const getProductoPorNombre = async(req = request, res = response) => {
 
 const getProductoMasVendido = async(req = request, res = response) => {
 
-    const { id } = req.params;
-    const producto = await Producto.findById(id).populate('usuario', 'nombre').populate('categoria', 'nombre');
+    const verProducto = await Producto.find().sort({vendidos: -1}).limit(10);
 
-    res.json({
-        msg: 'Producto por id',
-        producto
+    res.status(201).json({
+        msg: "Productos más Vendidos:",
+        verProducto
     })
 }
 

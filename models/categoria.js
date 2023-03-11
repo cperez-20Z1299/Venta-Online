@@ -7,7 +7,6 @@ const CategoriaSchema = Schema({
     },
     descripcion: {
         type: String,
-        required: true
     },
     proveedor: {
         type: String,

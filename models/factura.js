@@ -14,8 +14,7 @@ const FacturaSchema = Schema({
         type: Array
     },
     fecha:{
-        type: Date,
-        requiere: true,
+        type: Date
     }
 });
 

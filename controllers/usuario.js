@@ -35,6 +35,20 @@ const postUsuario = async (req = request, res = response) => {
     });
 }
 
+const registrarCliente = async (req = request, res = response) => {
+    const {nombre, correo, password} = req.body;
+    const usuarioRegistrado = new Usuario({nombre, correo, password});
+    const salt = bcryptjs.genSaltSync();
+    usuarioRegistrado.password = bcryptjs.hashSync(password, salt);
+    
+    await usuarioRegistrado.save();
+
+    res.status(201).json({
+        msg: 'Nuevo cliente registrado',
+        usuarioRegistrado
+    })
+}
+
 const putUsuario = async (req = request, res = response) => {
 
     const { id } = req.params;
@@ -132,6 +146,7 @@ const borrarCliente = async (req = request, res = response) => {
 module.exports = {
     getUsuarios,
     postUsuario,
+    registrarCliente,
     putUsuario,
     PutCliente,
     deleteUsuario,
